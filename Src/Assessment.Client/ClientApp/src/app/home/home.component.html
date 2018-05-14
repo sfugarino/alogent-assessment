@@ -1,17 +1,33 @@
 
-<div class="col-sm-4" *ngFor="let board of boards">
-  <div class="card">
-    <h3 class="card-header">
-      {{ board.name }}
-    </h3>
-    <div class="card-body">
-      <b>Posts</b>
-      <ul>
+<app-home-toolbar (createBoard)="createBoard($event)"></app-home-toolbar>
+<div class="row card-group">
+  <div class="col-sm-4" *ngFor="let board of boards; let i = index">
 
-      </ul>
+    <div class="card" [class.selected]="title === selectedTitle">
+      <div class="card-header">
+        <h3 class="float-left">{{ board.name }}</h3>
+        <a href="#" class="float-right" (click)="deleteBoard(board)"></a>
+      </div>
+      <div class="card-body">
+        <b class="card-subtitle text-muted">Posts</b>
+        <ul>
+          <li class="row" *ngFor="let postIt of board.postIts">
+              <span class="posit-text col-sm-10">{{postIt.text}}</span>
+              <span class="delete-button col-sm-2">
+                <a href="#" (click)="deletePostIt(board, postIt)"></a>
+              </span>
+          </li>
+        </ul>
+        <div class="addRow btn-group row">
+          <span class="col col-sm-10"><input #newPostIt  (keyup.enter)="addPostIt(board, newPostIt.value); newPostIt.value=''" required /></span>
+          <span class="col col-sm-2" ><button type="button" (click)="addPostIt(board, newPostIt.value); newPostIt.value=''">Add</button></span>
+        </div>
+      </div>
+      <div class="card-footer text-muted">
+        <small>Created {{ board.createdAt | date:short }}</small>
+      </div>
     </div>
-    <div class="card-footer text-muted">
-      <small>Created {{ board.createdAt | date:short }}</small>
-    </div>
+    <div class="is-clearfix" *ngIf="(i + 1) % 4 == 0"></div>
+
   </div>
 </div>

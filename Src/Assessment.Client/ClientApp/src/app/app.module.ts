@@ -6,11 +6,14 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { BoardsService } from './services/boards.service';
+import { ToolbarComponent } from './home/toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    ToolbarComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -20,7 +23,7 @@ import { HomeComponent } from './home/home.component';
       { path: '', component: HomeComponent, pathMatch: 'full' }
     ])
   ],
-  providers: [],
+  providers: [BoardsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

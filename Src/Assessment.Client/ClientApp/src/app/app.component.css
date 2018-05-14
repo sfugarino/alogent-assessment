@@ -3,4 +3,9 @@
   .body-content {
     padding-top: 50px;
   }
+
+  app-home .card {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
 }

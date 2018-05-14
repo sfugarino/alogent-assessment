@@ -24,8 +24,17 @@ namespace Assessment
             {
                 new Board{ Id = 1, CreatedAt = DateTime.Now.AddDays(-7), Name = "Board #1" },
                 new Board{ Id = 2, CreatedAt = DateTime.Now.AddDays(-2), Name = "Board #2" },
-                new Board{ Id = 3, CreatedAt = DateTime.Now.AddDays(-1), Name = "Board #3" }
+                new Board{ Id = 3, CreatedAt = DateTime.Now.AddDays(-1), Name = "Board #3" },
+                new Board{ Id = 4, CreatedAt = DateTime.Now.AddDays(-1), Name = "Board #4" },
+                new Board{ Id = 5, CreatedAt = DateTime.Now.AddDays(-1), Name = "Board #5" }
             };
+
+            boards[0].PostIts = new List<PostIt>
+            {
+                new PostIt { Id = 1, CreatedAt = DateTime.Now.AddDays(-7), Text="Post It #1"},
+                new PostIt { Id = 2, CreatedAt = DateTime.Now.AddDays(-7), Text="Post It #2"},
+                new PostIt { Id = 3, CreatedAt = DateTime.Now.AddDays(-7), Text="Post It #3"}
+            }.ToArray();
 
             var json = JsonConvert.SerializeObject(boards);
 

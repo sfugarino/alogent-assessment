@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Assessment.Web.Controllers;
 using Assessment.Web.Models;
 using Moq;
@@ -61,6 +63,44 @@ namespace Assessment.Web.Tests
             controller.Find(1);
 
             boardRepo.Verify(x => x.Find(1), Times.Once);
+        }
+
+        [Test]
+        public void Delete_InvalidId_ThrowArgumentException()
+        {
+            var boardRepo = Mock.Of<IBoardRepository>();
+            var controller = new BoardsController(boardRepo);
+            Assert.Throws<ArgumentException>(() =>
+            {
+                controller.Delete(6);
+            });
+        }
+
+        [Test]
+        public void Delete_ValidId_VerifyExpectedMethodsInvokecOnlyOnce()
+        {
+            var boardRepo = new Mock<IBoardRepository>();
+            boardRepo.Setup(x => x.Find(It.IsAny<int>())).Returns(new Board());
+            boardRepo.Setup(x => x.Delete(It.IsAny<int>())).Returns(true);
+
+            var controller = new BoardsController(boardRepo.Object);
+
+            controller.Delete(3);
+
+            boardRepo.Verify(x => x.Find(3), Times.Once);
+            boardRepo.Verify(x => x.Delete(3), Times.Once);
+        }
+
+        [Test]
+        public void Create_Valid_DoesLookupThroughRepository()
+        {
+            var boardRepo = new Mock<IBoardRepository>();
+            Board board = new Board
+            {
+                Id = 3
+            };
+
+            
         }
     }
 }

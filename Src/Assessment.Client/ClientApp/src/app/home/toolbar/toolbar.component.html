@@ -1,0 +1,5 @@
+<div class="btn-toolbar" role="toolbar">
+  <input #newBoard="ngModel" [(ngModel)]="value" (keyup.enter)="createBoardClicked(newBoard.value); newBoard.value=''" required />
+  <button type="button" class="btn-sm btn-secondary" [disabled]="!newBoard.valid" (click)="createBoardClicked(newBoard.value); newBoard.value=''">Create Board</button>
+
+</div>
