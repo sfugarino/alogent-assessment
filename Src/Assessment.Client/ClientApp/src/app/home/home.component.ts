@@ -4,6 +4,8 @@ import { Board } from '../models/board';
 import { PostIt } from '../models/post-it';
 import { BoardsService } from '../services/boards.service';
 import { ToolbarComponent } from './toolbar/toolbar.component';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +14,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 })
 export class HomeComponent implements OnInit {
   boards: Board[];
+
+  private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private dataSrv: BoardsService) { }
 
@@ -24,21 +28,25 @@ export class HomeComponent implements OnInit {
   public createBoard(name): void {
     let board = new Board();
     board.name = name;
-    this.dataSrv.createBoard(board).subscribe(
+    let create = this.dataSrv.createBoard(board).takeUntil(this.ngUnsubscribe).subscribe(
       result => {
         this.boards.push(result);
+        create.unsubscribe();
       },
       err => {
         // Log errors if any
         alert("An error occured creating board");
         console.log(err);
-      });
+      }
+    );
   }
 
   public addPostIt(board, text): void {
-    this.dataSrv.addPostIt(board.id, text).subscribe(
+    let add = this.dataSrv.addPostIt(board.id, text).takeUntil(this.ngUnsubscribe).subscribe(
       result => {
         board.postIts.push(result);
+
+        add.unsubscribe();
       },
       err => {
         // Log errors if any
@@ -48,7 +56,7 @@ export class HomeComponent implements OnInit {
   }
 
   public deletePostIt(board, postit): void {
-    this.dataSrv.deletePostIt(board.id, postit.id).subscribe(
+    this.dataSrv.deletePostIt(board.id, postit.id).takeUntil(this.ngUnsubscribe).subscribe(
       result => {
         board.postIts.splice(postit, 1);
       },
@@ -60,7 +68,7 @@ export class HomeComponent implements OnInit {
   }
 
   public deleteBoard(board: Board): void {
-    this.dataSrv.deleteBoard(board.id).subscribe(
+    this.dataSrv.deleteBoard(board.id).takeUntil(this.ngUnsubscribe).subscribe(
       result => {
         let index = this.boards.indexOf(board);
         this.boards.splice(index, 1);
@@ -70,5 +78,10 @@ export class HomeComponent implements OnInit {
         alert("An error occured deleting board");
         console.log(err);
       });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
